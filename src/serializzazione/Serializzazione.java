@@ -11,6 +11,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,31 +24,33 @@ public class Serializzazione {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         File f;
         f = new File("testo.ser");
-        studente s = new studente("e3e34", "pasquale", "gnegne");
+        generatore g=new generatore();
+        studente[] lista = new studente[3];
         try {
-            f.createNewFile();
+           g.generaGeneralita();
+            Thread t = new Thread(g);
+            
+            //blocco che scrive
+            
+            t.run();
+            
             FileOutputStream st = new FileOutputStream(f);
-            ObjectOutputStream OS = new ObjectOutputStream(st);
-            OS.writeObject("sono bello");
-           
-           
+            ObjectOutputStream OS = new ObjectOutputStream(st);  //va a sovrascrivere
+
             OS.close();
             st.close();
-           
+
+            //blocco che le legge
             FileInputStream FI = new FileInputStream(f);
             ObjectInputStream IS = new ObjectInputStream(FI);
-            String  v1 = (String) IS.readObject();
-           // String v2=(String) IS.readObject();
-            System.out.println(v1);
 
+// String v2=(String) IS.readObject();
         } catch (IOException ex) {
             Logger.getLogger(Serializzazione.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Serializzazione.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
+        }
     }
 }
